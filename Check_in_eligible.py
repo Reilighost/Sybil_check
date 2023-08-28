@@ -1,21 +1,25 @@
-# Define the file path
-address_file = 'exposed_wallets_to_482.txt'
+# Define the file paths
+address_file = 'eligible_wallet_list.txt'
+to_check_file = 'to_check.txt'
 
-# Read the file and get all addresses
+# Open and read the eligible addresses file
 with open(address_file, 'r') as f:
     addresses = f.readlines()
 
-# Deduplicate addresses using set and then convert back to list
-unique_addresses = list(set(addresses))
+# Open and read the addresses that need to be checked
+with open(to_check_file, 'r') as f:
+    to_check_addresses = f.readlines()
 
-# Sort the addresses if needed (optional)
-unique_addresses.sort()
+# Remove possible newline characters from each address
+addresses = [address.strip() for address in addresses]
+to_check_addresses = [address.strip() for address in to_check_addresses]
 
-# Calculate and print the number of duplicates and unique addresses
-num_duplicates = len(addresses) - len(unique_addresses)
-print(f"Number of duplicates: {num_duplicates}")
-print(f"Number of unique addresses: {len(unique_addresses)}")
+# Check each address and add the label "Eligible" if it already exists in 'eligible_wallet_list'
+output = []
+for index, address in enumerate(to_check_addresses, 1):
+    status = "Eligible" if address in addresses else ""
+    output.append(f"{address} {status}")
 
-# Write the unique addresses back to the file
-with open(address_file, 'w') as f:
-    f.writelines(unique_addresses)
+# Print the result
+for line in output:
+    print(line)
